@@ -24,27 +24,28 @@
   </footer>
 
   <script>
-    async function loadResults() {
-      const response = await fetch('/content/results/sample-result.md');
-      const text = await response.text();
+  async function loadResults() {
+    const response = await fetch('content/results/results.json'); // No "/" at start for GitHub Pages
+    const results = await response.json();
 
-      const title = text.match(/title:\s*"(.+)"/)[1];
-      const description = text.match(/description:\s*"(.+)"/)[1];
-      const link = text.match(/link:\s*"(.+)"/)[1];
-      const date = text.match(/date:\s*(.+)/)[1];
-
-      document.getElementById('results').innerHTML = `
-        <ul>
-          <li>
-            <strong>${title}</strong> (${new Date(date).toLocaleDateString()})<br>
-            <em>${description}</em><br>
-            <a href="${link}" target="_blank">📄 View Result</a>
-          </li>
-        </ul>
+    let html = '<ul>';
+    results.forEach(r => {
+      html += `
+        <li>
+          <strong>${r.title}</strong> (${new Date(r.date).toLocaleDateString()})<br>
+          <em>${r.description}</em><br>
+          <a href="${r.link}" target="_blank">📄 View Result</a>
+        </li>
       `;
-    }
+    });
+    html += '</ul>';
 
-    loadResults();
-  </script>
+    document.getElementById('results').innerHTML = html;
+  }
+
+  loadResults();
+</script>
+
 </body>
 </html>
+
